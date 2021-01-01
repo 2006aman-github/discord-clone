@@ -143,7 +143,7 @@ app.post("/api/users/login", async (req, res) => {
 
 app.get("/api/users/authenticate", verify, async (req, res) => {
   await User.findOne({ _id: req.user._id })
-    .populate("servers, message")
+    .populate("servers")
     .exec((err, data) => {
       if (err) res.status(400).send(err);
       res.status(200).send(data);
@@ -216,13 +216,39 @@ app.post("/api/servers/new", verify, async (req, res) => {
     });
 });
 
-app.get("/api/servers/:serverId", async (req, res) => {
+app.get("/api/servers/:serverId", verify, async (req, res) => {
   let serverId = req.params.serverId;
 
-  await Server.findOne({ _id: serverId }, (err, data) => {
+  await Server.findOne({ _id: serverId })
+    .populate("channels")
+    .exec((err, data) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).send(data);
+    });
+});
+
+app.get("/api/channels", verify, async (req, res) => {
+  await Channel.find()
+    .populate("messages")
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      res.status(200).send(data);
+    });
+});
+
+app.get("/api/channels/:channelId", verify, async (req, res) => {
+  console.log(req.params.channelId);
+  await Channel.findOne({ _id: req.params.channelId }, (err, data) => {
     if (err) return res.status(400).send(err);
-    res.status(400).send(data);
+    res.status(200).send(data);
   });
+  // .populate("messages")
+  // .exec((err, data) => {
+  //   if (err) return res.status(400).send(err);
+  //   res.status(200).send(data);
+  // });
 });
 
 app.listen(port, () => {

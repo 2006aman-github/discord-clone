@@ -7,6 +7,9 @@ export class StateProvider extends Component {
     user: {},
     deafen: false,
     mute: false,
+    activeServer: {},
+    showChannelCreateModal: false,
+    showServerCreateModal: false,
   };
 
   toggleDeafen = () => {
@@ -14,6 +17,25 @@ export class StateProvider extends Component {
       deafen: !this.state.deafen,
     });
   };
+  toggleShowServerCreateModal = () => {
+    this.setState({
+      showServerCreateModal: !this.state.showServerCreateModal,
+    });
+  };
+
+  toggleShowChannelCreateModal = () => {
+    this.setState({
+      showChannelCreateModal: !this.state.showChannelCreateModal,
+    });
+  };
+
+  addActiveServer = (server) => {
+    this.setState({
+      activeServer: server,
+    });
+    console.log("im at active server function");
+  };
+
   toggleMute = () => {
     this.setState({
       mute: !this.state.mute,
@@ -21,7 +43,6 @@ export class StateProvider extends Component {
   };
 
   loginUser = (user) => {
-    console.log("im here");
     this.setState({
       user: user,
     });
@@ -35,20 +56,8 @@ export class StateProvider extends Component {
   };
 
   render() {
-    const { user, deafen, mute } = this.state;
-    const { loginUser, logoutUser, toggleDeafen, toggleMute } = this;
     return (
-      <stateContext.Provider
-        value={{
-          user,
-          loginUser,
-          logoutUser,
-          toggleDeafen,
-          toggleMute,
-          deafen,
-          mute,
-        }}
-      >
+      <stateContext.Provider value={this}>
         {this.props.children}
       </stateContext.Provider>
     );

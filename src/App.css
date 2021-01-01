@@ -35,6 +35,11 @@
   font-size: 2.3rem;
   margin-right: 10px;
 }
+#hash {
+  color: rgb(99, 103, 110);
+  margin-right: 5px;
+  font-size: 1.5rem;
+}
 
 .main__app__header__right {
   display: flex;

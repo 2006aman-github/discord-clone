@@ -16,27 +16,37 @@ export default class ServerChannels extends Component {
     return (
       <div className="server__channels">
         <div className="server__channels__header">
-          <h4>coding classes</h4>
+          <h4>{this.props.activeServer?.name}</h4>
           <ExpandMoreIcon />
         </div>
         <div className="server__channels__body">
-          <span>
-            <div>
-              <ChevronRightIcon style={{ fontSize: "small" }} /> TEXT CHANNELS
-            </div>
-            <div>
-              <AddIcon />
-            </div>
-          </span>
-          <span>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <ChevronRightIcon style={{ fontSize: "small" }} />
-              VOICE CHANNELS
-            </div>
-            <div>
-              <AddIcon />
-            </div>
-          </span>
+          {this.props.activeServer?.channels?.map((channel) => (
+            <span
+              onClick={() => this.props.handleActiveChannel(channel?._id)}
+              style={{
+                backgroundColor:
+                  this.props.activeChannel?._id === channel?._id
+                    ? "#202225"
+                    : null,
+                width: "100%",
+                borderRadius: "5px",
+                padding: "5px",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1rem",
+                }}
+              >
+                <span id="hash">#</span> {channel?.name}
+              </div>
+            </span>
+          ))}
+
           {/* server channel footer  */}
         </div>
         <div className="server__channels__footer">
