@@ -32,8 +32,8 @@ function Server() {
         )
         .then((res) => {
           setActiveServer(res.data);
-          if (activeServer.channels) {
-            handleActiveChannel(activeServer.channels[0]?._id);
+          if (res.data.channels) {
+            handleActiveChannel(res.data.channels[0]?._id);
           }
         })
         .catch((err) => {
@@ -51,10 +51,11 @@ function Server() {
         { headers: { jwt: localStorage.getItem("discordJWT") } }
       )
       .then((res) => {
+        console.log(res.data);
         setActiveChannel(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   };
 
@@ -116,8 +117,8 @@ function Server() {
 
         {/* app body  */}
         <div className="main__app__body">
-          <ChatFeed />
-          <MessageInput />
+          <ChatFeed activeChannel={activeChannel} />
+          <MessageInput channel={activeChannel?._id} />
         </div>
         <CreateChannelModal />
         <CreateServerModal />

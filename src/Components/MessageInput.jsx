@@ -4,10 +4,37 @@ import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
 import { IconButton } from "@material-ui/core";
 import GifIcon from "@material-ui/icons/Gif";
 import Picker from "emoji-picker-react";
+import axios from "../axiosConfig";
 
 export default class MessageInput extends Component {
   state = {
-    showEmojiPicker: false,
+    message: "",
+  };
+
+  handleMessaging = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "/api/messages/new",
+        {
+          message: this.state.message,
+          channel: this.props.channel,
+        },
+        {
+          headers: {
+            jwt: localStorage.getItem("discordJWT"),
+          },
+        }
+      )
+      .then((res) => {
+        this.setState({
+          message: "",
+        });
+        console.log(res);
+      })
+      .catch((err) => {
+        alert(err.response.message);
+      });
   };
 
   render() {
@@ -39,22 +66,33 @@ export default class MessageInput extends Component {
             style={{ cursor: "pointer", margin: "0px 5px", color: "lightgrey" }}
           />
 
-          <input
-            placeholder="Message"
-            type="text"
-            style={{
-              backgroundColor: "#40444B",
-
-              border: "none",
-              padding: "10px",
-              height: "100%",
-
-              fontSize: "1rem",
-              flex: "1",
-              color: "white",
-              outline: "none",
+          <form
+            onSubmit={(e) => {
+              this.handleMessaging(e);
             }}
-          />
+            style={{ flex: "1", height: "100%", padding: "0" }}
+          >
+            <input
+              value={this.state.message}
+              onChange={(e) => {
+                this.setState({ message: e.target.value });
+              }}
+              placeholder="Message"
+              type="text"
+              style={{
+                backgroundColor: "#40444B",
+
+                border: "none",
+
+                height: "100%",
+
+                fontSize: "1rem",
+                width: "100%",
+                color: "white",
+                outline: "none",
+              }}
+            />
+          </form>
           {this.state.showEmojiPicker ? (
             <Picker onEmojiClick={(e) => console.log(e.target.value)} />
           ) : null}

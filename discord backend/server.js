@@ -6,6 +6,7 @@ const app = express();
 const User = require("./dbSchemas/dbUser");
 const Server = require("./dbSchemas/dbServer");
 const Channel = require("./dbSchemas/dbChannel");
+const Message = require("./dbSchemas/dbMessage");
 const bcrypt = require("bcrypt");
 const joi = require("@hapi/joi");
 const cors = require("cors");
@@ -239,16 +240,39 @@ app.get("/api/channels", verify, async (req, res) => {
 });
 
 app.get("/api/channels/:channelId", verify, async (req, res) => {
-  console.log(req.params.channelId);
-  await Channel.findOne({ _id: req.params.channelId }, (err, data) => {
-    if (err) return res.status(400).send(err);
-    res.status(200).send(data);
-  });
-  // .populate("messages")
-  // .exec((err, data) => {
-  //   if (err) return res.status(400).send(err);
-  //   res.status(200).send(data);
-  // });
+  let channelId = req.params.channelId;
+  await Channel.findOne({ _id: channelId })
+    .populate("messages")
+    .exec((err, data) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).send(data);
+    });
+});
+
+app.post("/api/messages/new", verify, (req, res) => {
+  let messageBody = req.body;
+  Message.create(
+    {
+      user: req.user._id,
+      message: messageBody.message,
+      channel: messageBody.channel,
+    },
+    async (err, data) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
+
+      console.log(messageBody.channel);
+      // let the channel know that a message is created
+      let channel = await Channel.findOne({ _id: messageBody.channel });
+      channel.messages.push(data._id);
+      channel.save((merr, mdata) => {
+        if (merr) return res.status(400).send(merr);
+      });
+
+      res.status(200).send(data);
+    }
+  );
 });
 
 app.listen(port, () => {

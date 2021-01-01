@@ -6,20 +6,9 @@ export default class ChatFeed extends Component {
   render() {
     return (
       <div className="chatfeed">
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#00A676"} />
-        <Message userColor={"#F865B0"} />
-        <Message userColor={"#0E103D"} />
-        <Message userColor={"#BD1E1E"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
-        <Message userColor={"#FF4E00"} />
+        {this.props.activeChannel?.messages?.map((message) => (
+          <Message message={message} userColor={"#FF4E00"} />
+        ))}
       </div>
     );
   }

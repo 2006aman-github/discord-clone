@@ -20,6 +20,22 @@ export default class ServerChannels extends Component {
           <ExpandMoreIcon />
         </div>
         <div className="server__channels__body">
+          <h4
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              color: "white",
+              width: "100%",
+              padding: "5px",
+              boxSizing: "border-box",
+            }}
+          >
+            Channels
+            <IconButton>
+              <AddIcon />
+            </IconButton>
+          </h4>
           {this.props.activeServer?.channels?.map((channel) => (
             <span
               onClick={() => this.props.handleActiveChannel(channel?._id)}
@@ -46,7 +62,6 @@ export default class ServerChannels extends Component {
               </div>
             </span>
           ))}
-
           {/* server channel footer  */}
         </div>
         <div className="server__channels__footer">

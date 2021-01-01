@@ -32,7 +32,7 @@ export default class Message extends Component {
             <span>Yesterday at 7:05AM</span>
           </div>
           <div className="message__body__text">
-            Loremus quaerat, maxime adipisci ex tempore, repellat sit veniam
+            {this.props.message?.message}
           </div>
         </div>
       </div>
