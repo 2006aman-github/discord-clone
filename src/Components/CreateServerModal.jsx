@@ -49,7 +49,7 @@ class CreateServerModal extends Component {
     return (
       <div>
         <Dialog
-          open={this.context?.state?.showServerCreateModal}
+          open={this.context?.showServerCreateModal}
           onClose={() => this.handleClose()}
           aria-labelledby="form-dialog-title"
         >

@@ -6,12 +6,19 @@ import { Component } from "react";
 // material ui imports
 
 import LoginPage from "./Components/LoginPage";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
 import { withRouter } from "react-router-dom";
-import { BrowserRouter as Switch, Route } from "react-router-dom";
 import SignupPage from "./Components/SignupPage";
 import stateContext from "./StateProvider";
 import axios from "./axiosConfig";
 import Server from "./Components/Server";
+import Pusher from "pusher-js";
+import NotFound from "./Components/NotFound";
+
+const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
+  cluster: "ap2",
+});
 
 class App extends Component {
   componentDidMount() {
@@ -26,9 +33,10 @@ class App extends Component {
           console.log(res.data);
           this.context.loginUser(res.data);
 
-          this.props.history.push(`/${res.data?.servers[0]._id}`);
+          this.props.history.push(`/channels/${res.data?.servers[0]._id}`);
         })
         .catch((err) => {
+          console.log(err);
           this.props.history.push("/login");
         });
     };
@@ -37,23 +45,22 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        <Switch>
-          <div className="App">
-            {/* <h1>Lets build a Discord clone Using Class components</h1> */}
-            <ServerList />
-            <Route path="/:serverId">
-              <Server />
-            </Route>
-          </div>
+      <Switch>
+        <div className="App">
+          {/* <h1>Lets build a Discord clone Using Class components</h1> */}
+
+          <Route exact path="/channels/:serverId">
+            <Server />
+          </Route>
           <Route exact path="/login">
             <LoginPage />
           </Route>
           <Route exact path="/signup">
             <SignupPage />
           </Route>
-        </Switch>
-      </>
+        </div>
+        <Route exact path="*" component={NotFound} />
+      </Switch>
     );
   }
 }

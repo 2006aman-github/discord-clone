@@ -2,10 +2,14 @@
   display: flex;
   /* align-items: center; */
   padding: 5px 12px;
-  height: auto;
   max-width: 100%;
   margin: 5px;
+  box-sizing: border-box;
   border-radius: 5px;
+  box-sizing: border-box;
+  height: auto;
+  /* border: 1px solid green; */
+  /* white-space: pre-wrap; */
 }
 
 .message:hover {
@@ -17,16 +21,27 @@
   flex-direction: column;
   /* border: 1px solid blue; */
   justify-content: start;
-  width: 100% !important;
+  max-width: 95%;
+  height: auto;
   align-items: start;
   padding: 0px 15px;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  /* border: 1px solid blue; */
 }
 
 .message__body__details {
   flex: 0.5;
+  max-width: 100%;
+  /* border: 1px solid blue; */
+  /* margin-bottom: 5px; */
 }
 .message__body__text {
+  height: 100%;
   height: auto;
+  width: 100%;
+  /* text-overflow: clip; */
+  /* border: 1px solid red; */
   text-align: left;
-  width: 100% !important;
+  /* text-overflow: ellipsis; */
 }

@@ -23,16 +23,25 @@ class CreateChannelModal extends Component {
   handleCreateChannel = async () => {
     if (this.state.channelName && this.state.channelName.length >= 3) {
       await axios
-        .post("/api/channels/new", {
-          name: this.state.channelName,
-          server: this.context.activeServer?._id,
-        })
+        .post(
+          "/api/channels/new",
+          {
+            name: this.state.channelName,
+            server: this.props.activeServer?._id,
+          },
+          {
+            headers: {
+              jwt: localStorage.getItem("discordJWT"),
+            },
+          }
+        )
         .then((res) => {
-          this.context.addActiveChannel(res.data);
+          this.props.handleActiveServer(res.data.server);
+          this.props.handleActiveChannel(res.data._id);
           this.context.toggleShowChannelCreateModal();
         })
         .catch((err) => {
-          alert(err.message);
+          console.log(err.response);
         });
     } else {
       alert("Server name must be atleat 4 characters long");
@@ -43,14 +52,14 @@ class CreateChannelModal extends Component {
     return (
       <div>
         <Dialog
-          open={this.context.state.showChannelCreateModal}
+          open={this.context.showChannelCreateModal}
           onClose={() => this.handleClose()}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Create Your Channel</DialogTitle>
           <DialogContent>
             <TextField
-              value={this.state.channelName}
+              value={this.channelName}
               onChange={(e) =>
                 this.setState({
                   channelName: e.target.value,

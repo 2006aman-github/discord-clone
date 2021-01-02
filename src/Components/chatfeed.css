@@ -1,12 +1,27 @@
 .chatfeed {
   flex: 1;
-  overflow: auto;
+  overflow-y: auto;
   background-color: rgb(48, 50, 56);
   color: white;
-  /* border: 3px solid red; */
-  width: 100% !important;
+  /* border: 1px solid red; */
+  text-align: center;
+  min-width: 0 !important;
   display: flex;
+  min-height: 0;
   flex-direction: column;
+}
+.chatfeed:first-child {
+  width: 100%;
+
+  text-align: left;
+}
+.chatfeed h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.chatfeed h1 span {
+  font-size: 2.4rem;
 }
 .chatfeed::-moz-selection {
   /* Code for Firefox */

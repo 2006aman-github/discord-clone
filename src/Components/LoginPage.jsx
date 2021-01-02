@@ -7,6 +7,8 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import { Link, withRouter } from "react-router-dom";
 import axios from "../axiosConfig";
 import { Snackbar } from "@material-ui/core";
+import stateContext from "../StateProvider";
+import CreateServerModal from "./CreateServerModal";
 
 class LoginPage extends Component {
   state = {
@@ -27,15 +29,19 @@ class LoginPage extends Component {
     await axios
       .post("/api/users/login", loginBody)
       .then((res) => {
-        this.setState({
-          showSnackBar: {
-            status: true,
-            message: res?.data?.message,
-          },
-          loginBtnDisabled: false,
-        });
         localStorage.setItem("discordJWT", res.data.jwt);
-        setTimeout(() => this.props.history.push("/"), 2000);
+        this.setState({ loginBtnDisabled: false });
+        if (res.data.user.servers[0]) {
+          this.setState({
+            showSnackBar: {
+              status: true,
+              message: res?.data?.message,
+            },
+          });
+          setTimeout(() => window.location.reload(), 2000);
+        } else {
+          this.context.toggleShowServerCreateModal();
+        }
       })
       .catch((err) => {
         this.setState({
@@ -141,6 +147,7 @@ class LoginPage extends Component {
               />
 
             </div> */}
+            <CreateServerModal />
             <Snackbar
               anchorOrigin={{
                 vertical: "top",
@@ -158,3 +165,4 @@ class LoginPage extends Component {
 }
 
 export default withRouter(LoginPage);
+LoginPage.contextType = stateContext;

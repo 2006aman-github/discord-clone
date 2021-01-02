@@ -7,8 +7,13 @@
   justify-content: start;
   background-color: rgb(32, 34, 37);
   padding: 6px;
+  min-width: 70px;
   height: 100vh;
+  overflow-y: auto;
   box-sizing: border-box;
+}
+.serverlist::-webkit-scrollbar {
+  display: none;
 }
 .server {
   display: grid;
@@ -23,8 +28,8 @@
   background-color: rgb(58, 58, 58);
   border: none;
   padding: 10px;
-  width: 30px;
-  height: 30px;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 50%;
   /* border: 1px solid red; */
   transition: 0.3s;
@@ -39,11 +44,6 @@
 }
 #add_icon:hover {
   background-color: rgb(67, 181, 129) !important;
-}
-.server__icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
 /* #home_icon {

@@ -13,7 +13,13 @@ import CreateServerModal from "./CreateServerModal";
 import CreateChannelModal from "./CreateChannelModal";
 import { useParams, withRouter } from "react-router-dom";
 import stateContext from "../StateProvider";
+import Pusher from "pusher-js";
 import axios from "../axiosConfig";
+import UserSettings from "./UserSettings";
+
+const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
+  cluster: "ap2",
+});
 
 function Server() {
   const { serverId } = useParams();
@@ -41,6 +47,34 @@ function Server() {
         });
     };
     axiosCall();
+
+    const axiosUserCall = async () => {
+      await axios
+        .get("/api/users/authenticate", {
+          headers: {
+            jwt: localStorage.getItem("discordJWT"),
+          },
+        })
+        .then(async (res) => {
+          console.log(res.data);
+          context.loginUser(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    // pusher message stuff
+    const channel = pusher.subscribe("messages");
+    channel.bind("newMessage", function (data) {
+      handleActiveChannel(data.change.fullDocument?.channel);
+    });
+
+    // pusher server stuff
+    const serverChannel = pusher.subscribe("servers");
+    serverChannel.bind("newServer", function (data) {
+      axiosUserCall();
+    });
   }, [serverId]);
 
   const handleActiveChannel = async (channelId) => {
@@ -51,7 +85,6 @@ function Server() {
         { headers: { jwt: localStorage.getItem("discordJWT") } }
       )
       .then((res) => {
-        console.log(res.data);
         setActiveChannel(res.data);
       })
       .catch((err) => {
@@ -59,8 +92,26 @@ function Server() {
       });
   };
 
+  const handleActiveServer = async (serverId) => {
+    await axios
+      .get(`/api/servers/${serverId}`, {
+        headers: {
+          jwt: localStorage.getItem("discordJWT"),
+        },
+      })
+      .then((res) => {
+        setActiveServer(res.data);
+      })
+      .catch((err) => {
+        alert(
+          "There was some problem updating your new channel. Try refreshing the page"
+        );
+      });
+  };
+
   return (
     <>
+      <ServerList />
       <ServerChannels
         activeServer={activeServer}
         activeChannel={activeChannel}
@@ -117,11 +168,16 @@ function Server() {
 
         {/* app body  */}
         <div className="main__app__body">
-          <ChatFeed activeChannel={activeChannel} />
-          <MessageInput channel={activeChannel?._id} />
+          <ChatFeed activeServer={activeServer} activeChannel={activeChannel} />
+          <MessageInput channel={activeChannel} />
         </div>
-        <CreateChannelModal />
+        <CreateChannelModal
+          activeServer={activeServer}
+          handleActiveServer={handleActiveServer}
+          handleActiveChannel={handleActiveChannel}
+        />
         <CreateServerModal />
+        <UserSettings />
       </div>
     </>
   );

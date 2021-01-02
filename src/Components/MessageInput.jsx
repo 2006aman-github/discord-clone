@@ -13,12 +13,16 @@ export default class MessageInput extends Component {
 
   handleMessaging = (e) => {
     e.preventDefault();
+    console.log(this.props.channel?._id);
+    this.setState({
+      message: "",
+    });
     axios
       .post(
         "/api/messages/new",
         {
           message: this.state.message,
-          channel: this.props.channel,
+          channel: this.props.channel._id,
         },
         {
           headers: {
@@ -27,9 +31,6 @@ export default class MessageInput extends Component {
         }
       )
       .then((res) => {
-        this.setState({
-          message: "",
-        });
         console.log(res);
       })
       .catch((err) => {

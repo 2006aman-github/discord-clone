@@ -10,6 +10,7 @@ import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import SettingsIcon from "@material-ui/icons/Settings";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 export default class ServerChannels extends Component {
   render() {
@@ -20,33 +21,44 @@ export default class ServerChannels extends Component {
           <ExpandMoreIcon />
         </div>
         <div className="server__channels__body">
-          <h4
+          <h5
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              color: "white",
+              color: "#ddd",
               width: "100%",
               padding: "5px",
               boxSizing: "border-box",
             }}
           >
-            Channels
+            <span>
+              <ArrowForwardIosIcon
+                style={{ color: "#ddd", fontSize: "8px", marginRight: "3px" }}
+              />
+              TEXT CHANNELS
+            </span>
             <IconButton>
-              <AddIcon />
+              <AddIcon
+                style={{ color: "#ddd" }}
+                onClick={() => {
+                  this.context.toggleShowChannelCreateModal();
+                }}
+              />
             </IconButton>
-          </h4>
+          </h5>
           {this.props.activeServer?.channels?.map((channel) => (
             <span
+              className="channel"
               onClick={() => this.props.handleActiveChannel(channel?._id)}
               style={{
                 backgroundColor:
                   this.props.activeChannel?._id === channel?._id
-                    ? "#202225"
+                    ? "#393c43"
                     : null,
                 width: "100%",
                 borderRadius: "5px",
-                padding: "5px",
+                padding: "0px 3px",
                 boxSizing: "border-box",
               }}
             >
@@ -56,6 +68,10 @@ export default class ServerChannels extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "1rem",
+                  color:
+                    this.props.activeChannel?._id === channel?._id
+                      ? "white"
+                      : null,
                 }}
               >
                 <span id="hash">#</span> {channel?.name}
@@ -78,10 +94,10 @@ export default class ServerChannels extends Component {
                 this.context.toggleDeafen();
               }}
             >
-              {this.context.deafen ? (
-                <VolumeOffIcon style={{ fontSize: "20px" }} />
+              {this.context?.deafen ? (
+                <VolumeOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
               ) : (
-                <VolumeUpIcon style={{ fontSize: "20px" }} />
+                <VolumeUpIcon style={{ fontSize: "20px", color: "#ddd" }} />
               )}
             </IconButton>
             <IconButton
@@ -90,14 +106,19 @@ export default class ServerChannels extends Component {
                 this.context.toggleMute();
               }}
             >
-              {this.context.mute ? (
-                <MicOffIcon style={{ fontSize: "20px" }} />
+              {this.context?.mute ? (
+                <MicOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
               ) : (
-                <MicIcon style={{ fontSize: "20px" }} />
+                <MicIcon style={{ fontSize: "20px", color: "#ddd" }} />
               )}
             </IconButton>
-            <IconButton size="small">
-              <SettingsIcon style={{ fontSize: "20px" }} />
+            <IconButton
+              onClick={() => {
+                this.context.toggleShowUserSettings();
+              }}
+              size="small"
+            >
+              <SettingsIcon style={{ fontSize: "20px", color: "#ddd" }} />
             </IconButton>
           </div>
         </div>

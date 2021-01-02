@@ -7,6 +7,7 @@ const User = require("./dbSchemas/dbUser");
 const Server = require("./dbSchemas/dbServer");
 const Channel = require("./dbSchemas/dbChannel");
 const Message = require("./dbSchemas/dbMessage");
+const Pusher = require("pusher");
 const bcrypt = require("bcrypt");
 const joi = require("@hapi/joi");
 const cors = require("cors");
@@ -14,6 +15,14 @@ const { loginValidation, registerValidation } = require("./authValidate");
 const jwt = require("jsonwebtoken");
 const { verify } = require("./verifyJWT");
 require("dotenv").config();
+
+const pusher = new Pusher({
+  appId: "1131310",
+  key: "d6de7d7d9c3d0d22b615",
+  secret: "de239a43e0a2db325e4f",
+  cluster: "ap2",
+  useTLS: true,
+});
 
 const connection_url =
   "mongodb+srv://aman2006:aman@123@cluster0.dboat.mongodb.net/discord-clone?retryWrites=true&w=majority";
@@ -26,6 +35,42 @@ mongoose.connect(connection_url, {
 
 mongoose.connection.once("open", () => {
   console.log("Mongo DB connected!, congrats!!..");
+
+  const messageChangeStream = mongoose.connection
+    .collection("messages")
+    .watch();
+  const serverChangeStream = mongoose.connection.collection("servers").watch();
+
+  messageChangeStream.on("change", (change) => {
+    if (change.operationType === "insert") {
+      pusher.trigger("messages", "newMessage", {
+        change: change,
+      });
+    } else if (change.operationType === "update") {
+      pusher.trigger("messagesUpdate", "updatedMessage", {
+        change: change,
+      });
+    } else {
+      console.log("Error triggering Pusher");
+    }
+  });
+
+  serverChangeStream.on("change", (change) => {
+    console.log("hey some change");
+    if (change.operationType === "insert") {
+      console.log("hey some insert change");
+
+      pusher.trigger("servers", "newServer", {
+        change: change,
+      });
+    } else if (change.operationType === "update") {
+      pusher.trigger("serversUpdate", "updatedServer", {
+        change: change,
+      });
+    } else {
+      console.log("Error triggering Pusher");
+    }
+  });
 });
 
 // middlewares
@@ -226,6 +271,27 @@ app.get("/api/servers/:serverId", verify, async (req, res) => {
       if (err) return res.status(400).send(err);
       res.status(200).send(data);
     });
+});
+
+app.post("/api/channels/new", verify, async (req, res) => {
+  console.log(req.body);
+  await Channel.create(
+    {
+      server: req.body.server,
+      name: req.body.name,
+    },
+    async (err, data) => {
+      if (err) return res.status(400).send("fuck of");
+
+      // let the server know that a channel is created
+      let server = await Server.findById(req.body.server);
+      server.channels.push(data._id);
+      server.save((serr, sdata) => {
+        if (serr) return res.status(402).send(serr);
+      });
+      res.status(200).send(data);
+    }
+  );
 });
 
 app.get("/api/channels", verify, async (req, res) => {

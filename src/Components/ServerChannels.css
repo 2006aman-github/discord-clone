@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  color: #ddd;
 }
 .server__channels__header {
   height: 50px;
@@ -33,7 +34,11 @@
   width: 100%;
   flex: 1;
 }
-.server__channels__body span {
+.server__channels__body h5:hover {
+  cursor: pointer;
+  color: #fff;
+}
+.channel {
   color: gray;
   display: flex;
   align-items: center;
@@ -41,9 +46,11 @@
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
+  margin: 1.7px 0;
 }
-.server__channels__body span:hover {
+.channel:hover {
   color: rgb(228, 228, 228);
+  background-color: #393c43;
 }
 .server__channels__footer {
   background-color: rgb(79, 84, 92);
@@ -64,4 +71,5 @@
   align-items: center;
   justify-content: space-between;
   flex: 1;
+  color: #ddd !important;
 }
