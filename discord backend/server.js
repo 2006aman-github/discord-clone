@@ -281,7 +281,7 @@ app.post("/api/channels/new", verify, async (req, res) => {
       name: req.body.name,
     },
     async (err, data) => {
-      if (err) return res.status(400).send("fuck of");
+      if (err) return res.status(400).send(err);
 
       // let the server know that a channel is created
       let server = await Server.findById(req.body.server);
@@ -308,7 +308,12 @@ app.get("/api/channels", verify, async (req, res) => {
 app.get("/api/channels/:channelId", verify, async (req, res) => {
   let channelId = req.params.channelId;
   await Channel.findOne({ _id: channelId })
-    .populate("messages")
+    .populate({
+      path: "messages",
+      populate: {
+        path: "user",
+      },
+    })
     .exec((err, data) => {
       if (err) return res.status(400).send(err);
       res.status(200).send(data);

@@ -12,8 +12,16 @@
 }
 .chatfeed:first-child {
   width: 100%;
+  /* color: #43b581; */
 
   text-align: left;
+}
+.chatfeed h2 {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid rgb(133, 133, 133);
+  line-height: 0.1em;
+  margin: 10px 0px 20px;
 }
 .chatfeed h1 {
   font-size: 2rem;

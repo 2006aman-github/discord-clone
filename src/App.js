@@ -59,7 +59,7 @@ class App extends Component {
             <SignupPage />
           </Route>
         </div>
-        <Route exact path="*" component={NotFound} />
+        {/* <Route exact path="*" component={NotFound} /> */}
       </Switch>
     );
   }

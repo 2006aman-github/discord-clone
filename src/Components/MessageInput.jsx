@@ -57,6 +57,7 @@ export default class MessageInput extends Component {
             justifyContent: "center",
             alignItems: "center",
             padding: "10px",
+
             backgroundColor: "#40444B",
             height: "20px",
             borderRadius: "5px",
@@ -86,7 +87,7 @@ export default class MessageInput extends Component {
                 border: "none",
 
                 height: "100%",
-
+                margin: "0",
                 fontSize: "1rem",
                 width: "100%",
                 color: "white",
@@ -94,16 +95,9 @@ export default class MessageInput extends Component {
               }}
             />
           </form>
-          {this.state.showEmojiPicker ? (
-            <Picker onEmojiClick={(e) => console.log(e.target.value)} />
-          ) : null}
+
           <EmojiEmotionsIcon
             style={{ cursor: "pointer", margin: "0px 5px", color: "lightgrey" }}
-            onClick={(e) =>
-              this.setState({
-                showEmojiPicker: true,
-              })
-            }
           />
           <GifIcon
             style={{ cursor: "pointer", margin: "0px 5px", color: "lightgrey" }}

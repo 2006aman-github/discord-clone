@@ -5,11 +5,11 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StateProvider } from "./StateProvider";
 import reducer, { initialState } from "./reducer";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import LoginPage from "./Components/LoginPage";
 import SignupPage from "./Components/SignupPage";
 import ServerList from "./Components/ServerList";
+import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>

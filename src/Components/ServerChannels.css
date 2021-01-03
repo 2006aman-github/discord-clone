@@ -32,6 +32,8 @@
   padding: 10px;
   box-sizing: border-box;
   width: 100%;
+  overflow-y: auto;
+
   flex: 1;
 }
 .server__channels__body h5:hover {

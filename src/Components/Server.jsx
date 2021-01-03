@@ -16,6 +16,7 @@ import stateContext from "../StateProvider";
 import Pusher from "pusher-js";
 import axios from "../axiosConfig";
 import UserSettings from "./UserSettings";
+import discord from "../images/discord.png";
 
 const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
   cluster: "ap2",
@@ -26,6 +27,7 @@ function Server() {
   const context = useContext(stateContext);
   const [activeServer, setActiveServer] = useState({});
   const [activeChannel, setActiveChannel] = useState({});
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const axiosCall = async () => {
       await axios
@@ -41,6 +43,9 @@ function Server() {
           if (res.data.channels) {
             handleActiveChannel(res.data.channels[0]?._id);
           }
+          setTimeout(() => {
+            setLoading(false);
+          }, 1500);
         })
         .catch((err) => {
           console.log(err);
@@ -49,15 +54,16 @@ function Server() {
     axiosCall();
 
     const axiosUserCall = async () => {
+      setLoading(true);
       await axios
         .get("/api/users/authenticate", {
           headers: {
             jwt: localStorage.getItem("discordJWT"),
           },
         })
-        .then(async (res) => {
-          console.log(res.data);
+        .then((res) => {
           context.loginUser(res.data);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -85,6 +91,7 @@ function Server() {
         { headers: { jwt: localStorage.getItem("discordJWT") } }
       )
       .then((res) => {
+        console.log(res.data);
         setActiveChannel(res.data);
       })
       .catch((err) => {
@@ -93,6 +100,7 @@ function Server() {
   };
 
   const handleActiveServer = async (serverId) => {
+    setLoading(true);
     await axios
       .get(`/api/servers/${serverId}`, {
         headers: {
@@ -101,6 +109,7 @@ function Server() {
       })
       .then((res) => {
         setActiveServer(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         alert(
@@ -111,7 +120,25 @@ function Server() {
 
   return (
     <>
-      <ServerList />
+      <div
+        style={{ display: loading ? "grid" : "none" }}
+        className="loading__screen"
+      >
+        <div
+          style={{
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img width="70" height="70" src={discord} alt={"Discord"} />
+          <span>LOADING</span>
+        </div>
+      </div>
+
+      <ServerList activeServer={activeServer} />
       <ServerChannels
         activeServer={activeServer}
         activeChannel={activeChannel}

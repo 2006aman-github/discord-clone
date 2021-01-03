@@ -28,10 +28,34 @@ export default class ChatFeed extends Component {
             This is the start of the #{this.props.activeChannel?.name} channel!
           </p>
         </div>
-        <hr />
-        {this.props.activeChannel?.messages?.map((message) => (
-          <Message message={message} userColor={"#FF4E00"} />
-        ))}
+        <h2></h2>
+        {this.props.activeChannel?.messages?.map((message) => {
+          if (
+            new Date(message.messageTime).getHours() ===
+            new Date(
+              this.props.activeChannel?.messages[
+                this.props.activeChannel?.messages.indexOf(message) - 1
+              ]?.messageTime
+            ).getHours()
+          ) {
+            return (
+              <Message
+                noAvatar={true}
+                activeServer={this.props.activeServer}
+                message={message}
+                userColor={"#FF4E00"}
+              />
+            );
+          } else {
+            return (
+              <Message
+                activeServer={this.props.activeServer}
+                message={message}
+                userColor={"#FF4E00"}
+              />
+            );
+          }
+        })}
         <div ref={this.messagesEndRef} />
       </div>
     );

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import "./ServerChannels.css";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import stateContext from "../StateProvider";
-import { Avatar, IconButton } from "@material-ui/core";
+import { Avatar, IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import MicIcon from "@material-ui/icons/Mic";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
@@ -13,6 +12,31 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 export default class ServerChannels extends Component {
+  useStylesBootstrap = makeStyles((theme) => ({
+    arrow: {
+      color: theme.palette.common.black,
+    },
+    tooltip: {
+      fontSize: "0.8rem",
+      fontWeight: "normal",
+      padding: "5px",
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
+
+  BootstrapTooltip = (props) => {
+    const classes = this.useStylesBootstrap();
+
+    return (
+      <Tooltip
+        arrow
+        classes={classes}
+        {...props}
+        style={{ fontSize: "1rem !important" }}
+        placement="top"
+      />
+    );
+  };
   render() {
     return (
       <div className="server__channels">
@@ -95,9 +119,13 @@ export default class ServerChannels extends Component {
               }}
             >
               {this.context?.deafen ? (
-                <VolumeOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                <this.BootstrapTooltip title="Undeafen">
+                  <VolumeOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                </this.BootstrapTooltip>
               ) : (
-                <VolumeUpIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                <this.BootstrapTooltip title="Deafen">
+                  <VolumeUpIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                </this.BootstrapTooltip>
               )}
             </IconButton>
             <IconButton
@@ -107,9 +135,13 @@ export default class ServerChannels extends Component {
               }}
             >
               {this.context?.mute ? (
-                <MicOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                <this.BootstrapTooltip title="UnMute">
+                  <MicOffIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                </this.BootstrapTooltip>
               ) : (
-                <MicIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                <this.BootstrapTooltip title="Mute">
+                  <MicIcon style={{ fontSize: "20px", color: "#ddd" }} />
+                </this.BootstrapTooltip>
               )}
             </IconButton>
             <IconButton
@@ -118,7 +150,9 @@ export default class ServerChannels extends Component {
               }}
               size="small"
             >
-              <SettingsIcon style={{ fontSize: "20px", color: "#ddd" }} />
+              <this.BootstrapTooltip title="User Settings">
+                <SettingsIcon style={{ fontSize: "20px", color: "#ddd" }} />
+              </this.BootstrapTooltip>
             </IconButton>
           </div>
         </div>

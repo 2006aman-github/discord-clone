@@ -1,7 +1,7 @@
 .message {
   display: flex;
   /* align-items: center; */
-  padding: 5px 12px;
+  padding: 0px 12px;
   max-width: 100%;
   margin: 5px;
   box-sizing: border-box;
@@ -24,7 +24,7 @@
   max-width: 95%;
   height: auto;
   align-items: start;
-  padding: 0px 15px;
+  padding: 0px 10px;
   overflow-wrap: break-word;
   box-sizing: border-box;
   /* border: 1px solid blue; */
@@ -39,6 +39,7 @@
 .message__body__text {
   height: 100%;
   height: auto;
+  position: relative;
   width: 100%;
   /* text-overflow: clip; */
   /* border: 1px solid red; */
