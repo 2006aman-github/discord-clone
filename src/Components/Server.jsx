@@ -50,7 +50,7 @@ function Server() {
           }, 1500);
         })
         .catch((err) => {
-          console.log(err);
+          alert("something went wrong! Try reloading your page");
         });
     };
     axiosCall();
@@ -68,7 +68,7 @@ function Server() {
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          console.log("error logging you in!");
         });
     };
 
@@ -95,15 +95,16 @@ function Server() {
             },
           })
           .then((res) => {
-            context.addInvite("localhost:3000" + "/invite/" + res.data.jwt);
+            context.addInvite(
+              "https://discord-clone-299804.web.app" + "/invite/" + res.data.jwt
+            );
             console.log(context.invite);
           })
           .catch((err) => {
-            console.log(err.response);
             console.log("unable to fetch server invite url");
           });
       } else {
-        console.log(activeServer?._id);
+        console.log("Something went wrong!");
       }
     };
     axiosInviteCall();
@@ -117,11 +118,10 @@ function Server() {
         { headers: { jwt: localStorage.getItem("discordJWT") } }
       )
       .then((res) => {
-        console.log(res.data);
         setActiveChannel(res.data);
       })
       .catch((err) => {
-        console.log(err.response);
+        alert("Something went wrong! Try reloading your page");
       });
   };
 

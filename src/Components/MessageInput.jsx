@@ -13,7 +13,6 @@ export default class MessageInput extends Component {
 
   handleMessaging = (e) => {
     e.preventDefault();
-    console.log(this.props.channel?._id);
     this.setState({
       message: "",
     });
@@ -31,7 +30,7 @@ export default class MessageInput extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
+        console.log("message sent");
       })
       .catch((err) => {
         alert(err.response.message);

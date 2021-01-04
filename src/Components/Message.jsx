@@ -33,7 +33,6 @@ export default class Message extends Component {
     );
   };
   render() {
-    // console.log(new Date().toLocaleString());
     let messageTime = new Date(this.props.message?.messageTime);
     const options = {
       weekday: "long",
