@@ -42,7 +42,6 @@ const StyledMenuItem = withStyles((theme) => ({
 
 export default function ServerMenu() {
   const [open, setOpen] = React.useState(false);
-
   const handleClose = () => {
     setOpen(false);
   };

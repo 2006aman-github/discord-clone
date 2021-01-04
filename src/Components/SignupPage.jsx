@@ -54,7 +54,6 @@ class SignupPage extends Component {
         }
       })
       .catch((err) => {
-        console.log(err.response);
         this.setState({
           showSnackBar: {
             status: true,

@@ -4,7 +4,6 @@ import stateContext from "../StateProvider";
 import PersonPinCircleIcon from "@material-ui/icons/PersonPinCircle";
 
 function ServerMember({ member, admin }) {
-  console.log(member);
   return (
     <div
       className="server-member"

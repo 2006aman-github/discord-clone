@@ -13,8 +13,8 @@ import queryString from "query-string";
 
 class LoginPage extends Component {
   state = {
-    email: "amanjames122@gmail.com",
-    password: "12345",
+    email: "",
+    password: "",
     showSnackBar: {},
     loginBtnDisabled: false,
   };
@@ -34,10 +34,9 @@ class LoginPage extends Component {
         localStorage.setItem("discordJWT", res.data.jwt);
         this.setState({ loginBtnDisabled: false });
         if (parsedQueries) {
-          return this.props.history.replace(parsedQueries.redirect);
+          return this.props.history.push(parsedQueries.redirect);
         }
         if (res.data.user.servers[0]) {
-          console.log("lololo");
           this.setState({
             showSnackBar: {
               status: true,

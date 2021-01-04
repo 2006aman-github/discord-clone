@@ -37,7 +37,7 @@ export default function InvitePage() {
     if (!localStorage.getItem("discordJWT")) {
       history.push(`/signup?redirect=${location.pathname}`);
     } else {
-      console.log(inviteId);
+      
       const axiosCall = async () => {
         await axios
           .get("/api/getServerId", {
@@ -47,7 +47,7 @@ export default function InvitePage() {
           })
           .then((res) => {
             setServer(res.data);
-            console.log(res.data);
+           
           })
           .catch((err) => {
             console.log(err.response);
@@ -76,7 +76,7 @@ export default function InvitePage() {
         }, 1500);
       })
       .catch((err) => {
-        console.log(err.response);
+        
         if (err.response?.status === 403) {
           alert(
             "The Server You are trying to join is unavailable. Please Try again! or contact the admin"

@@ -35,6 +35,7 @@ class CreateServerModal extends Component {
           }
         )
         .then((res) => {
+          
           this.context.toggleShowServerCreateModal();
         })
         .catch((err) => {
