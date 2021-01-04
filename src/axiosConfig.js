@@ -1,10 +1,7 @@
 import axios from "axios";
 
-let baseURL = "   ";
-
 const instance = axios.create({
-  baseURL: baseURL,
+  baseURL: "https://discord-clone2021.herokuapp.com",
 });
 
 export default instance;
-export { baseURL };

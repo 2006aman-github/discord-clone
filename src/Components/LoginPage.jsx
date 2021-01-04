@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import "../undraw_Group_chat_re_frmo.svg";
-import GoogleLogin from "react-google-login";
+
 import "./loginpage.css";
-import FacebookLogin from "react-facebook-login";
-import FacebookIcon from "@material-ui/icons/Facebook";
+
 import { Link, withRouter } from "react-router-dom";
 import axios from "../axiosConfig";
 import { Snackbar } from "@material-ui/core";
@@ -33,19 +32,20 @@ class LoginPage extends Component {
       .then((res) => {
         localStorage.setItem("discordJWT", res.data.jwt);
         this.setState({ loginBtnDisabled: false });
-        if (parsedQueries) {
-          return this.props.history.push(parsedQueries.redirect);
-        }
-        if (res.data.user.servers[0]) {
-          this.setState({
-            showSnackBar: {
-              status: true,
-              message: res?.data?.message,
-            },
-          });
-          setTimeout(() => window.location.reload(), 2000);
+        if (parsedQueries?.redirect) {
+          this.props.history.push(parsedQueries.redirect);
         } else {
-          this.context.toggleShowServerCreateModal();
+          if (res.data.user.servers[0]) {
+            this.setState({
+              showSnackBar: {
+                status: true,
+                message: res?.data?.message,
+              },
+            });
+            setTimeout(() => window.location.reload(), 2000);
+          } else {
+            this.context.toggleShowServerCreateModal();
+          }
         }
       })
       .catch((err) => {

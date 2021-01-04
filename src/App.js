@@ -24,6 +24,7 @@ const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
 class App extends Component {
   componentDidMount() {
     const axiosCall = async () => {
+      console.log("hello");
       if (this.props.location?.pathname.includes("/invite/")) {
         this.props.history.push(this.props.location?.pathname);
       } else {

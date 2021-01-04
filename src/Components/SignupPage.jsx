@@ -42,7 +42,7 @@ class SignupPage extends Component {
           },
           loginBtnDisabled: false,
         });
-        if (parsedQueries) {
+        if (parsedQueries.redirect) {
           setTimeout(
             this.props.history.push(
               `/login?redirect=${parsedQueries.redirect}`
