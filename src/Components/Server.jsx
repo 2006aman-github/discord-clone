@@ -17,6 +17,7 @@ import Pusher from "pusher-js";
 import axios from "../axiosConfig";
 import UserSettings from "./UserSettings";
 import discord from "../images/discord.png";
+import ServerMembers from "./ServerMembers";
 
 const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
   cluster: "ap2",
@@ -28,6 +29,7 @@ function Server() {
   const [activeServer, setActiveServer] = useState({});
   const [activeChannel, setActiveChannel] = useState({});
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const axiosCall = async () => {
       await axios
@@ -82,6 +84,30 @@ function Server() {
       axiosUserCall();
     });
   }, [serverId]);
+
+  useEffect(() => {
+    const axiosInviteCall = async () => {
+      if (activeServer._id) {
+        await axios
+          .get("/api/getInviteId", {
+            headers: {
+              serverId: activeServer._id,
+            },
+          })
+          .then((res) => {
+            context.addInvite("localhost:3000" + "/invite/" + res.data.jwt);
+            console.log(context.invite);
+          })
+          .catch((err) => {
+            console.log(err.response);
+            console.log("unable to fetch server invite url");
+          });
+      } else {
+        console.log(activeServer?._id);
+      }
+    };
+    axiosInviteCall();
+  }, [activeServer]);
 
   const handleActiveChannel = async (channelId) => {
     await axios
@@ -154,21 +180,24 @@ function Server() {
             <NotificationsIcon
               style={{
                 margin: "0 8px",
-                color: "#DCDDDE",
+                color: "grey",
                 cursor: "pointer",
               }}
             />
             <BookmarksIcon
               style={{
                 margin: "0 8px",
-                color: "#DCDDDE",
+                color: "grey",
                 cursor: "pointer",
               }}
             />
             <GroupIcon
+              onClick={() => {
+                context.toggleShowMembers();
+              }}
               style={{
                 margin: "0 8px",
-                color: "#DCDDDE",
+                color: context.showMembers ? "#fff" : "grey",
                 cursor: "pointer",
               }}
             />
@@ -206,6 +235,9 @@ function Server() {
         <CreateServerModal />
         <UserSettings />
       </div>
+      {context.showMembers ? (
+        <ServerMembers activeServer={activeServer} />
+      ) : null}
     </>
   );
 }

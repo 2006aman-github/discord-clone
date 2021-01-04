@@ -9,7 +9,8 @@ import reducer, { initialState } from "./reducer";
 import LoginPage from "./Components/LoginPage";
 import SignupPage from "./Components/SignupPage";
 import ServerList from "./Components/ServerList";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import InvitePage from "./Components/InvitePage";
 
 ReactDOM.render(
   <React.StrictMode>

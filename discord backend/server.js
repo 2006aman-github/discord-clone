@@ -14,18 +14,18 @@ const cors = require("cors");
 const { loginValidation, registerValidation } = require("./authValidate");
 const jwt = require("jsonwebtoken");
 const { verify } = require("./verifyJWT");
+const { verifyInvite } = require("./verifyInvitation");
 require("dotenv").config();
 
 const pusher = new Pusher({
-  appId: "1131310",
-  key: "d6de7d7d9c3d0d22b615",
-  secret: "de239a43e0a2db325e4f",
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
   cluster: "ap2",
   useTLS: true,
 });
 
-const connection_url =
-  "mongodb+srv://aman2006:aman@123@cluster0.dboat.mongodb.net/discord-clone?retryWrites=true&w=majority";
+const connection_url = process.env.MONGODB_URL;
 // mongo db connection
 mongoose.connect(connection_url, {
   useNewUrlParser: true,
@@ -56,10 +56,7 @@ mongoose.connection.once("open", () => {
   });
 
   serverChangeStream.on("change", (change) => {
-    console.log("hey some change");
     if (change.operationType === "insert") {
-      console.log("hey some insert change");
-
       pusher.trigger("servers", "newServer", {
         change: change,
       });
@@ -78,6 +75,23 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  // Pass to next layer of middleware
+  next();
+});
 
 const port = process.env.PORT || 3001;
 app.get("/", (req, res) => {
@@ -157,9 +171,10 @@ app.post("/api/users/login", async (req, res) => {
   //     message: error,
   //   });
 
-  let user = (await User.findOne({ email: loginBody.email })).populate(
-    "servers"
-  );
+  let user = (await User.findOne({ email: loginBody.email }))?.populate([
+    "servers",
+    "joinedServers",
+  ]);
   if (!user) {
     return res.status(404).json({
       message: "Email or Password is Incorrect!",
@@ -189,11 +204,18 @@ app.post("/api/users/login", async (req, res) => {
 
 app.get("/api/users/authenticate", verify, async (req, res) => {
   await User.findOne({ _id: req.user._id })
-    .populate("servers")
+    .populate(["servers", "joinedServers"])
     .exec((err, data) => {
       if (err) res.status(400).send(err);
       res.status(200).send(data);
     });
+});
+app.get("/api/servers/getServerId", verifyInvite, async (req, res) => {
+  let serverId = req.invite;
+  await Server.findById(serverId._id).exec((err, data) => {
+    if (err) res.status(400).send(err);
+    res.status(200).send(data);
+  });
 });
 
 // authentication routes are completed here
@@ -266,7 +288,7 @@ app.get("/api/servers/:serverId", verify, async (req, res) => {
   let serverId = req.params.serverId;
 
   await Server.findOne({ _id: serverId })
-    .populate("channels")
+    .populate(["channels", "members"])
     .exec((err, data) => {
       if (err) return res.status(400).send(err);
       res.status(200).send(data);
@@ -274,7 +296,6 @@ app.get("/api/servers/:serverId", verify, async (req, res) => {
 });
 
 app.post("/api/channels/new", verify, async (req, res) => {
-  console.log(req.body);
   await Channel.create(
     {
       server: req.body.server,
@@ -333,7 +354,6 @@ app.post("/api/messages/new", verify, (req, res) => {
         return res.status(400).send(err);
       }
 
-      console.log(messageBody.channel);
       // let the channel know that a message is created
       let channel = await Channel.findOne({ _id: messageBody.channel });
       channel.messages.push(data._id);
@@ -344,6 +364,51 @@ app.post("/api/messages/new", verify, (req, res) => {
       res.status(200).send(data);
     }
   );
+});
+
+// invitation routes
+
+app.get("/api/getServerId", verifyInvite, async (req, res) => {
+  let server = await Server.findById(req.invite?._id);
+  res.status(200).send(server);
+});
+
+app.get("/api/getInviteId", (req, res) => {
+  const token = jwt.sign(
+    { _id: req.header("serverId") },
+    process.env.TOKEN_INVITE_SECRET
+  );
+  res.status(200).send({
+    jwt: token,
+  });
+});
+
+app.get("/api/invitations", verifyInvite, verify, async (req, res) => {
+  let inviteId = req.invite;
+  let server = await Server.findById(inviteId?._id);
+  if (
+    !server.members.includes(req.user?._id) &&
+    !(req.user?._id === server.admin)
+  ) {
+    server.members.push(req.user._id);
+    server.save(async (err, data) => {
+      if (err) return res.status(400).send(err);
+
+      // let the user know that he/she joined the server
+      let user = await User.findById(req.user._id);
+      user.joinedServers.push(data._id);
+      user.save((uerr, udata) => {
+        if (uerr) return res.status(400).send(uerr);
+        return res.status(200).send({
+          message: "Joined Server Successfully!",
+        });
+      });
+    });
+  } else {
+    res.status(205).send({
+      message: "You have already Joined",
+    });
+  }
 });
 
 app.listen(port, () => {

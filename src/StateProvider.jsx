@@ -11,11 +11,26 @@ export class StateProvider extends Component {
     showChannelCreateModal: false,
     showServerCreateModal: false,
     showUserSettings: false,
+    invite: "",
+    showSnackBar: {},
+    showMembers: false,
   };
 
   toggleShowUserSettings = () => {
     this.setState({
       showUserSettings: !this.state.showUserSettings,
+    });
+  };
+
+  toggleShowMembers = () => {
+    this.setState({
+      showMembers: !this.state.showMembers,
+    });
+  };
+
+  setShowSnackBar = (snackbar) => {
+    this.setState({
+      showSnackBar: snackbar,
     });
   };
 
@@ -40,7 +55,6 @@ export class StateProvider extends Component {
     this.setState({
       activeServer: server,
     });
-    console.log("im at active server function");
   };
 
   toggleMute = () => {
@@ -61,6 +75,11 @@ export class StateProvider extends Component {
     });
     localStorage.setItem("discordJWT", null);
   };
+  addInvite = (link) => {
+    this.setState({
+      invite: link,
+    });
+  };
 
   render() {
     const {
@@ -71,27 +90,39 @@ export class StateProvider extends Component {
       toggleShowUserSettings,
       loginUser,
       logoutUser,
+      addInvite,
+      setShowSnackBar,
+      toggleShowMembers,
     } = this;
     const {
       user,
       deafen,
+      showMembers,
       mute,
+      invite,
       activeServer,
       showChannelCreateModal,
       showServerCreateModal,
       showUserSettings,
+      showSnackBar,
     } = this.state;
     return (
       <stateContext.Provider
         value={{
           user,
+          invite,
+          showSnackBar,
           deafen,
           mute,
           activeServer,
           showChannelCreateModal,
           showServerCreateModal,
           showUserSettings,
+          showMembers,
+          toggleShowMembers,
           toggleDeafen,
+          setShowSnackBar,
+          addInvite,
           toggleMute,
           toggleShowChannelCreateModal,
           toggleShowServerCreateModal,

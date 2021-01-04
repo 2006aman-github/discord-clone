@@ -28,12 +28,12 @@ const userSchema = new Schema(
         ref: "Server",
       },
     ],
-    // joinedServers: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Server",
-    //   },
-    // ],
+    joinedServers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Server",
+      },
+    ],
     messages: [
       {
         type: Schema.Types.ObjectId,

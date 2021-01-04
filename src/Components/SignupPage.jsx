@@ -6,6 +6,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import { Link, withRouter } from "react-router-dom";
 import axios from "../axiosConfig";
 import { Snackbar } from "@material-ui/core";
+import queryString from "query-string";
 
 class SignupPage extends Component {
   state = {
@@ -17,6 +18,7 @@ class SignupPage extends Component {
   };
 
   signup = async () => {
+    let parsedQueries = queryString.parse(window.location.search);
     this.setState({
       showSnackBar: {
         status: false,
@@ -40,7 +42,16 @@ class SignupPage extends Component {
           },
           loginBtnDisabled: false,
         });
-        setTimeout(this.props.history.push("/login"), 5000);
+        if (parsedQueries) {
+          setTimeout(
+            this.props.history.push(
+              `/login?redirect=${parsedQueries.redirect}`
+            ),
+            5000
+          );
+        } else {
+          setTimeout(this.props.history.push(`/login`), 5000);
+        }
       })
       .catch((err) => {
         console.log(err.response);
@@ -113,7 +124,7 @@ class SignupPage extends Component {
                 value={this.state.loginBtnDisabled ? "Registering" : "Register"}
               />
               <small>
-                Have an account? <Link to="/login">Login</Link>
+                Have an account? <Link to={`/login`}>Login</Link>
               </small>
             </form>
             {/* <small>or</small>

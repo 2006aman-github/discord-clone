@@ -9,6 +9,7 @@ import axios from "../axiosConfig";
 import { Snackbar } from "@material-ui/core";
 import stateContext from "../StateProvider";
 import CreateServerModal from "./CreateServerModal";
+import queryString from "query-string";
 
 class LoginPage extends Component {
   state = {
@@ -19,6 +20,7 @@ class LoginPage extends Component {
   };
 
   login = async () => {
+    let parsedQueries = queryString.parse(window.location.search);
     this.setState({
       loginBtnDisabled: true,
     });
@@ -31,7 +33,11 @@ class LoginPage extends Component {
       .then((res) => {
         localStorage.setItem("discordJWT", res.data.jwt);
         this.setState({ loginBtnDisabled: false });
+        if (parsedQueries) {
+          return this.props.history.replace(parsedQueries.redirect);
+        }
         if (res.data.user.servers[0]) {
+          console.log("lololo");
           this.setState({
             showSnackBar: {
               status: true,

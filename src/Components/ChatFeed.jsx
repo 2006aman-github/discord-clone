@@ -32,11 +32,15 @@ export default class ChatFeed extends Component {
         {this.props.activeChannel?.messages?.map((message) => {
           if (
             new Date(message.messageTime).getHours() ===
-            new Date(
+              new Date(
+                this.props.activeChannel?.messages[
+                  this.props.activeChannel?.messages.indexOf(message) - 1
+                ]?.messageTime
+              ).getHours() &&
+            message.user?._id ===
               this.props.activeChannel?.messages[
                 this.props.activeChannel?.messages.indexOf(message) - 1
-              ]?.messageTime
-            ).getHours()
+              ].user?._id
           ) {
             return (
               <Message

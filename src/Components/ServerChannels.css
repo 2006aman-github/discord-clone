@@ -33,7 +33,6 @@
   box-sizing: border-box;
   width: 100%;
   overflow-y: auto;
-
   flex: 1;
 }
 .server__channels__body h5:hover {
@@ -55,7 +54,8 @@
   background-color: #393c43;
 }
 .server__channels__footer {
-  background-color: rgb(79, 84, 92);
+  background-color: rgb(33, 35, 39);
+
   color: white;
   display: flex;
   align-items: center;
@@ -72,6 +72,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 1;
+  flex: 0.3;
   color: #ddd !important;
 }

@@ -15,6 +15,7 @@ import axios from "./axiosConfig";
 import Server from "./Components/Server";
 import Pusher from "pusher-js";
 import NotFound from "./Components/NotFound";
+import InvitePage from "./Components/InvitePage";
 
 const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
   cluster: "ap2",
@@ -23,22 +24,23 @@ const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
 class App extends Component {
   componentDidMount() {
     const axiosCall = async () => {
-      await axios
-        .get("/api/users/authenticate", {
-          headers: {
-            jwt: localStorage.getItem("discordJWT"),
-          },
-        })
-        .then(async (res) => {
-          console.log(res.data);
-          this.context.loginUser(res.data);
-
-          this.props.history.push(`/channels/${res.data?.servers[0]._id}`);
-        })
-        .catch((err) => {
-          console.log(err);
-          this.props.history.push("/login");
-        });
+      if (this.props.location?.pathname.includes("/invite/")) {
+        this.props.history.push(this.props.location?.pathname);
+      } else {
+        await axios
+          .get("/api/users/authenticate", {
+            headers: {
+              jwt: localStorage.getItem("discordJWT"),
+            },
+          })
+          .then(async (res) => {
+            this.context.loginUser(res.data);
+            this.props.history.push(`/channels/${res.data?.servers[0]._id}/`);
+          })
+          .catch((err) => {
+            this.props.history.push("/login");
+          });
+      }
     };
     axiosCall();
   }
@@ -48,7 +50,6 @@ class App extends Component {
       <Switch>
         <div className="App">
           {/* <h1>Lets build a Discord clone Using Class components</h1> */}
-
           <Route exact path="/channels/:serverId">
             <Server />
           </Route>
@@ -58,8 +59,10 @@ class App extends Component {
           <Route exact path="/signup">
             <SignupPage />
           </Route>
+          <Route exact path="/invite/:inviteId">
+            <InvitePage />
+          </Route>
         </div>
-        {/* <Route exact path="*" component={NotFound} /> */}
       </Switch>
     );
   }

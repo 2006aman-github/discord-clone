@@ -7,6 +7,12 @@ const serverSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    members: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     name: String,
     createdDate: {
       type: Date,

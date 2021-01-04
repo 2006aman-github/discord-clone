@@ -82,6 +82,42 @@ export default class ServerList extends Component {
           </this.BootstrapTooltip>
         ))}
 
+        {this.context?.user?.joinedServers?.map((server) => (
+          <this.BootstrapTooltip title={server.name}>
+            <div
+              style={{
+                borderLeft:
+                  this.props.activeServer?._id === server?._id
+                    ? "4px solid white"
+                    : null,
+              }}
+              className="server"
+            >
+              <Link
+                style={{ margin: "0", padding: "0", textDecoration: "none" }}
+                to={`/channels/${server._id}`}
+              >
+                <Avatar
+                  style={{
+                    borderRadius:
+                      this.props.activeServer?._id === server?._id
+                        ? "15px"
+                        : null,
+                    backgroundColor:
+                      this.props.activeServer?._id === server?._id
+                        ? "rgb(114, 137, 218)"
+                        : null,
+                    fontSize: "15px",
+                  }}
+                  className="server__icon"
+                >
+                  {server.name.slice(0, 1)}
+                </Avatar>
+              </Link>
+            </div>
+          </this.BootstrapTooltip>
+        ))}
+
         {/* add server button  */}
         <div
           onClick={() => {

@@ -53,6 +53,10 @@ export default class Message extends Component {
             time: "",
           });
         }}
+        style={{
+          margin: this.props.noAvatar ? "0 5px" : "5px",
+          padding: this.props.noAvatar ? "0px" : "5px",
+        }}
         className="message"
       >
         <Avatar

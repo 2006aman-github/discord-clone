@@ -3,15 +3,47 @@ import "./ServerChannels.css";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import stateContext from "../StateProvider";
-import { Avatar, IconButton, makeStyles, Tooltip } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogTitle,
+  IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import MicIcon from "@material-ui/icons/Mic";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import CloseIcon from "@material-ui/icons/Close";
+import ServerMenu from "./ServerMenu";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import axios from "../axiosConfig";
 
 export default class ServerChannels extends Component {
+  state = {
+    openDialogue: false,
+    anchorEl: null,
+  };
+
+  handleClick = (e) => {
+    this.setState({
+      anchorEl: e.currentTarget,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      anchorEl: null,
+    });
+  };
   useStylesBootstrap = makeStyles((theme) => ({
     arrow: {
       color: theme.palette.common.black,
@@ -37,12 +69,77 @@ export default class ServerChannels extends Component {
       />
     );
   };
+
+  copyToClipboard = (e) => {
+    this.input.select();
+    document.execCommand("copy");
+    // This is just personal preference.
+    // I prefer to not show the whole text area selected.
+    e.target.focus();
+    this.setState({ copySuccess: "Copied!" });
+  };
+
   render() {
     return (
       <div className="server__channels">
         <div className="server__channels__header">
           <h4>{this.props.activeServer?.name}</h4>
-          <ExpandMoreIcon />
+          <ExpandMoreIcon
+            onClick={(e) => {
+              this.handleClick(e);
+            }}
+          />
+          <Menu
+            id="simple-menu"
+            anchorEl={this.state.anchorEl}
+            keepMounted
+            open={Boolean(this.state.anchorEl)}
+            onClose={() => this.handleClose()}
+          >
+            <MenuItem
+              onClick={() => {
+                this.setState({ openDialogue: true, anchorEl: false });
+              }}
+            >
+              Invite a Member <PersonAddIcon style={{ marginLeft: "10px" }} />
+            </MenuItem>
+          </Menu>
+
+          {/* dialouge  */}
+          <Dialog
+            style={{ padding: "20px", textAlign: "center" }}
+            open={this.state.openDialogue}
+          >
+            <DialogTitle
+              style={{ textAlign: "right" }}
+              id="simple-dialog-title"
+            >
+              <IconButton>
+                <CloseIcon
+                  onClick={() => {
+                    this.setState({
+                      openDialogue: false,
+                    });
+                  }}
+                />
+              </IconButton>
+            </DialogTitle>
+            <DialogTitle id="simple-dialog-title">
+              Invite People To {this.props.activeServer?.name}
+            </DialogTitle>
+            <Typography variant="p" id="simple-dialog-title">
+              SEND AN INVITATION LINK TO YOUR FRIEND
+            </Typography>
+            <TextField
+              onClick={(e) => {
+                navigator.clipboard.writeText(this.context.invite);
+                e.target.select();
+              }}
+              value={this.context.invite}
+              style={{ margin: "20px" }}
+              label="LINK"
+            ></TextField>
+          </Dialog>
         </div>
         <div className="server__channels__body">
           <h5
@@ -108,9 +205,9 @@ export default class ServerChannels extends Component {
           <div style={{ flex: "0.5" }}>
             <Avatar />
           </div>
-          <small>
+          <h4>
             <b>{this.context?.user?.username?.slice(0, 10)}</b>
-          </small>
+          </h4>
           <div className="server__channels__footer__icons">
             <IconButton
               size="small"
