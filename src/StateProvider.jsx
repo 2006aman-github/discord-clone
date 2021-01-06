@@ -14,6 +14,18 @@ export class StateProvider extends Component {
     invite: "",
     showSnackBar: {},
     showMembers: false,
+    showRightSidebar: false,
+    showServerMembers: false,
+  };
+  toggleShowRightSidebar = () => {
+    this.setState({
+      showRightSidebar: !this.state.showRightSidebar,
+    });
+  };
+  toggleShowServerMembers = () => {
+    this.setState({
+      showServerMembers: !this.state.showServerMembers,
+    });
   };
 
   toggleShowUserSettings = () => {
@@ -93,6 +105,8 @@ export class StateProvider extends Component {
       addInvite,
       setShowSnackBar,
       toggleShowMembers,
+      toggleShowRightSidebar,
+      toggleShowServerMembers,
     } = this;
     const {
       user,
@@ -105,30 +119,36 @@ export class StateProvider extends Component {
       showServerCreateModal,
       showUserSettings,
       showSnackBar,
+      showRightSidebar,
+      showServerMembers,
     } = this.state;
     return (
       <stateContext.Provider
         value={{
           user,
-          invite,
-          showSnackBar,
           deafen,
+          showMembers,
           mute,
+          invite,
           activeServer,
           showChannelCreateModal,
           showServerCreateModal,
           showUserSettings,
-          showMembers,
-          toggleShowMembers,
+          showSnackBar,
+          showRightSidebar,
+          showServerMembers,
           toggleDeafen,
-          setShowSnackBar,
-          addInvite,
           toggleMute,
           toggleShowChannelCreateModal,
           toggleShowServerCreateModal,
           toggleShowUserSettings,
           loginUser,
           logoutUser,
+          addInvite,
+          setShowSnackBar,
+          toggleShowMembers,
+          toggleShowRightSidebar,
+          toggleShowServerMembers,
         }}
       >
         {this.props.children}

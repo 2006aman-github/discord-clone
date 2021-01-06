@@ -89,6 +89,15 @@ export default class ServerChannels extends Component {
               this.handleClick(e);
             }}
           />
+          <CloseIcon
+            id="closeIcon"
+            onClick={() => {
+              this.context.toggleShowRightSidebar();
+              if (this.context.showMembers) {
+                this.context.toggleShowMembers();
+              }
+            }}
+          />
           <Menu
             id="simple-menu"
             anchorEl={this.state.anchorEl}

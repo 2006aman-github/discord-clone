@@ -17,7 +17,7 @@ export default class ChatFeed extends Component {
   render() {
     return (
       <div className="chatfeed">
-        <div>
+        <div style={{ padding: "10px" }}>
           <h1 style={{ fontWeight: "9000" }}>
             Welcome To <span>#</span>
             {this.props.activeChannel?.name === "general"

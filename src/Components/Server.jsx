@@ -9,6 +9,7 @@ import MessageInput from "./MessageInput";
 import ChatFeed from "./ChatFeed";
 import ServerChannels from "./ServerChannels";
 import ServerList from "./ServerList";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import CreateServerModal from "./CreateServerModal";
 import CreateChannelModal from "./CreateChannelModal";
 import { useParams, withRouter } from "react-router-dom";
@@ -18,6 +19,7 @@ import axios from "../axiosConfig";
 import UserSettings from "./UserSettings";
 import discord from "../images/discord.png";
 import ServerMembers from "./ServerMembers";
+import { IconButton } from "@material-ui/core";
 
 const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
   cluster: "ap2",
@@ -164,16 +166,31 @@ function Server() {
         </div>
       </div>
 
-      <ServerList activeServer={activeServer} />
-      <ServerChannels
-        activeServer={activeServer}
-        activeChannel={activeChannel}
-        handleActiveChannel={handleActiveChannel}
-      />
+      <div
+        style={{
+          left: context.showRightSidebar ? "0" : "-400px",
+          zIndex: context.showRightSidebar ? "4" : "1",
+        }}
+        className="rightSide"
+      >
+        <ServerList activeServer={activeServer} />
+        <ServerChannels
+          activeServer={activeServer}
+          activeChannel={activeChannel}
+          handleActiveChannel={handleActiveChannel}
+        />
+      </div>
       <div className="main__app">
         {/* header  */}
         <div className="main__app__header">
           <span>
+            <ArrowForwardIosIcon
+              onClick={() => {
+                context.toggleShowRightSidebar();
+              }}
+              id="rightSidebar__caller"
+              style={{ fontSize: "medium", color: "#ddd", marginRight: "5px" }}
+            />
             <h1>#</h1> {activeChannel?.name}
           </span>
           <div className="main__app__header__right">
@@ -194,6 +211,9 @@ function Server() {
             <GroupIcon
               onClick={() => {
                 context.toggleShowMembers();
+                if (context.showRightSidebar) {
+                  context.toggleShowRightSidebar();
+                }
               }}
               style={{
                 margin: "0 8px",
@@ -206,6 +226,7 @@ function Server() {
               <SearchIcon />
             </div>
             <InboxIcon
+              id="inboxIcon"
               style={{
                 margin: "0 8px",
                 color: "#DCDDDE",
@@ -213,6 +234,7 @@ function Server() {
               }}
             />
             <HelpIcon
+              id="helpIcon"
               style={{
                 margin: "0 8px",
                 color: "#DCDDDE",

@@ -36,6 +36,7 @@ class App extends Component {
           })
           .then(async (res) => {
             this.context.loginUser(res.data);
+            console.log(res.data);
             this.props.history.push(`/channels/${res.data?.servers[0]._id}/`);
           })
           .catch((err) => {
