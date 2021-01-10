@@ -5,7 +5,6 @@ import AddIcon from "@material-ui/icons/Add";
 import stateContext from "../StateProvider";
 import {
   Avatar,
-  Button,
   Dialog,
   DialogTitle,
   IconButton,
@@ -23,9 +22,8 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import CloseIcon from "@material-ui/icons/Close";
-import ServerMenu from "./ServerMenu";
+
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import axios from "../axiosConfig";
 
 export default class ServerChannels extends Component {
   state = {

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./chatfeed.css";
 import Message from "./Message";
-let messagesEndRef;
 export default class ChatFeed extends Component {
   messagesEndRef = React.createRef();
 

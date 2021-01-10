@@ -30,7 +30,8 @@ export default class ServerMembers extends Component {
           MEMEBERS
         </small>
 
-        <ServerMember member={this.context.user} admin />
+        {console.log(this.props?.activeServer?.admin)}
+        <ServerMember member={this.props?.activeServer?.admin} admin />
 
         {this.props.activeServer?.members?.map((member) => (
           <ServerMember member={member} />

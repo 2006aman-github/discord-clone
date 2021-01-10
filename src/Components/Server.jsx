@@ -52,7 +52,7 @@ function Server() {
           }, 1500);
         })
         .catch((err) => {
-          alert("something went wrong! Try reloading your page");
+          console.log(err);
         });
     };
     axiosCall();

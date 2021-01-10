@@ -21,8 +21,10 @@ function ServerMember({ member, admin }) {
       <Avatar style={{ width: "30px", marginRight: "8px", height: "30px" }}>
         {member?.username?.slice(0, 1)}
       </Avatar>
-      {member?.username.slice(0, 20)}
-      {admin ? <PersonPinCircleIcon /> : null}
+      {member?.username?.length > 20
+        ? member?.username.slice(0, 20) + "..."
+        : member?.username}
+      {admin && <PersonPinCircleIcon />}
     </div>
   );
 }
