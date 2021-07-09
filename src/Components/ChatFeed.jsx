@@ -27,7 +27,7 @@ export default class ChatFeed extends Component {
             This is the start of the #{this.props.activeChannel?.name} channel!
           </p>
         </div>
-        <h2></h2>
+        <b></b>
         {this.props.activeChannel?.messages?.map((message) => {
           if (
             new Date(message.messageTime).getHours() ===

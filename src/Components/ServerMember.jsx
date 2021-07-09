@@ -1,6 +1,5 @@
-import { Avatar, makeStyles, Tooltip } from "@material-ui/core";
-import React, { useContext } from "react";
-import stateContext from "../StateProvider";
+import { Avatar } from "@material-ui/core";
+import React from "react";
 import PersonPinCircleIcon from "@material-ui/icons/PersonPinCircle";
 
 function ServerMember({ member, admin }) {

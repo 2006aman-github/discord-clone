@@ -19,7 +19,6 @@ import axios from "../axiosConfig";
 import UserSettings from "./UserSettings";
 import discord from "../images/discord.png";
 import ServerMembers from "./ServerMembers";
-import { IconButton } from "@material-ui/core";
 
 const pusher = new Pusher("d6de7d7d9c3d0d22b615", {
   cluster: "ap2",
@@ -89,16 +88,16 @@ function Server() {
 
   useEffect(() => {
     const axiosInviteCall = async () => {
-      if (activeServer._id) {
+      if (activeServer?._id) {
         await axios
           .get("/api/getInviteId", {
             headers: {
-              serverId: activeServer._id,
+              serverId: activeServer?._id,
             },
           })
           .then((res) => {
             context.addInvite(
-              "https://discord-clone-299804.web.app" + "/invite/" + res.data.jwt
+              `https://discord-clone-299804.web.app/invite/${res.data.jwt}`
             );
             console.log(context.invite);
           })
